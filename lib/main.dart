@@ -1,3 +1,4 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,52 +10,57 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: HomePage(),
     );
+  }
+}
+
+class CounterCubit extends Cubit<int> {
+  CounterCubit() : super(0);
+
+  void increment() => emit(state + 1);
+
+  @override
+  void onChange(Change<int> change) {
+    super.onChange(change);
+    print(change);
   }
 }
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  Stream<int> countStream() async* {
-    for (int i = 1; i <= 10; i++) {
-      await Future.delayed(const Duration(seconds: 1));
-      yield i;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    print("REBUILD");
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Stream Apps"),
+        title: Text("CUBIT APPS"),
       ),
-      body: StreamBuilder(
-        stream: countStream(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: Text(
-                "Loading...",
-                style: TextStyle(
-                  fontSize: 50,
-                ),
+      body: const Column(
+        children: [
+          Center(
+            child: Text(
+              "...",
+              style: TextStyle(
+                fontSize: 50,
               ),
-            );
-          } else {
-            return Center(
-              child: Text(
-                "${snapshot.data}",
-                style: const TextStyle(
-                  fontSize: 50
-                ),
+            ),
+          ),
+          SizedBox(height: 20,),
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.remove)
               ),
-            );
-          }
-        },
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.add),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }
