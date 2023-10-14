@@ -17,45 +17,60 @@ class MyApp extends StatelessWidget {
 }
 
 class CounterCubit extends Cubit<int> {
-  CounterCubit() : super(0);
+  CounterCubit({this.initialData = 0}) : super(initialData);
 
-  void increment() => emit(state + 1);
+  int initialData;
 
-  @override
-  void onChange(Change<int> change) {
-    super.onChange(change);
-    print(change);
+  void tambahData () {
+    emit(state + 1);
+  }
+
+  void kurangData () {
+    emit(state - 1);
   }
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
+  CounterCubit mycounter  = CounterCubit(initialData: 60);
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("CUBIT APPS"),
       ),
-      body: const Column(
+      body: Column(
         children: [
-          Center(
-            child: Text(
-              "...",
-              style: TextStyle(
-                fontSize: 50,
-              ),
-            ),
+          StreamBuilder (
+            initialData: mycounter.initialData,
+            stream: mycounter.stream,
+            builder: (context, snapshot) {
+                return Center(
+                  child: Text(
+                    "${snapshot.data}",
+                    style: const TextStyle(
+                      fontSize: 50,
+                    ),
+                  ),
+                );
+              }
           ),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  mycounter.kurangData();
+                },
                 icon: Icon(Icons.remove)
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  mycounter.tambahData();
+                },
                 icon: Icon(Icons.add),
               )
             ],
