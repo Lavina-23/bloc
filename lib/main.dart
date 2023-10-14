@@ -20,6 +20,8 @@ class CounterCubit extends Cubit<int> {
   CounterCubit({this.initialData = 0}) : super(initialData);
 
   int initialData;
+  // int? current;
+  // int? next;
 
   void tambahData () {
     emit(state + 1);
@@ -28,12 +30,28 @@ class CounterCubit extends Cubit<int> {
   void kurangData () {
     emit(state - 1);
   }
+
+  @override
+  void onChange(Change<int> change) {
+    // TODO: implement onChange
+    super.onChange(change);
+    print(change);
+    // current = change.currentState;
+    // next = change.nextState;
+  }
+
+  @override
+  void onError(Object error, StackTrace stackTrace) {
+    // TODO: implement onError
+    super.onError(error, stackTrace);
+    print(error);
+  }
 }
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  CounterCubit mycounter  = CounterCubit(initialData: 60);
+  CounterCubit mycounter  = CounterCubit(initialData : 0);
   
   @override
   Widget build(BuildContext context) {
@@ -48,11 +66,28 @@ class HomePage extends StatelessWidget {
             stream: mycounter.stream,
             builder: (context, snapshot) {
                 return Center(
-                  child: Text(
-                    "${snapshot.data}",
-                    style: const TextStyle(
-                      fontSize: 50,
-                    ),
+                  child: Column(
+                    children: [
+                      Text(
+                        "${snapshot.data}",
+                        style: const TextStyle(
+                          fontSize: 50,
+                        ),
+                      ),
+                      const SizedBox(height: 10,),
+                      // Text(
+                      //   "Current : ${mycounter.current}",
+                      //   style: TextStyle(
+                      //     fontSize: 50,
+                      //   ),
+                      // ),
+                      // Text(
+                      //   "Next : ${mycounter.next}",
+                      //   style: TextStyle(
+                      //     fontSize: 50,
+                      //   ),
+                      // )
+                    ],
                   ),
                 );
               }
