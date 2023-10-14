@@ -11,45 +11,43 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("BLOC LISTENER"),
+        title: const Text("BLOC CONSUMER"),
       ),
       body: Column(
         children: [
-          BlocListener<Counter, int>(
+          BlocConsumer<Counter, int>(
             bloc: mycounter,
-            listener: (context, state) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  duration: Duration(seconds: 1),
-                  content: Text("DATA GENAP")
-                ),
-              );
-            },
-            listenWhen: (previous, current) {
-              if (current % 2 == 0) {
+            buildWhen: (previous, current) {
+              if (current >= 10) {
                 return true;
               } else {
                 return false;
               }
             },
-            child: BlocBuilder<Counter, int>(
-              bloc: mycounter,
-              builder: (context, state) {
+            builder: (context, state) {
                 return Text(
                   "$state",
                   style: const TextStyle(
                     fontSize: 50,
                   ),
                 );
-              }
+              },
+              listener: (context, state) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    duration: Duration(seconds: 1),
+                    content: Text("DATA GENAP")
+                  ),
+                );
+              },
+              listenWhen: (previous, current) {
+                if (current % 2 == 0) {
+                  return true;
+                } else {
+                  return false;
+                }
+              },
             ),
-          ),
-          // StreamBuilder(
-          //   initialData: mycounter.init,
-          //   stream: mycounter.stream,
-          //   builder: (context, snapshot){
-          //   }
-          // ),
           const SizedBox( height: 50,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
