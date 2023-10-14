@@ -11,27 +11,38 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("BLOC BUILDER"),
+        title: const Text("BLOC LISTENER"),
       ),
       body: Column(
         children: [
-          BlocBuilder<Counter, int>(
+          BlocListener<Counter, int>(
             bloc: mycounter,
-            buildWhen: (previous, current) {
+            listener: (context, state) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  duration: Duration(seconds: 1),
+                  content: Text("DATA GENAP")
+                ),
+              );
+            },
+            listenWhen: (previous, current) {
               if (current % 2 == 0) {
                 return true;
               } else {
                 return false;
               }
             },
-            builder: (context, state) {
-              return Text(
-                "$state",
-                style: const TextStyle(
-                  fontSize: 50,
-                ),
-              );
-            },
+            child: BlocBuilder<Counter, int>(
+              bloc: mycounter,
+              builder: (context, state) {
+                return Text(
+                  "$state",
+                  style: const TextStyle(
+                    fontSize: 50,
+                  ),
+                );
+              }
+            ),
           ),
           // StreamBuilder(
           //   initialData: mycounter.init,
