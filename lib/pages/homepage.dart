@@ -1,93 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learn_bloc/bloc/counter.dart';
-import 'package:learn_bloc/other/other.dart';
-import 'package:learn_bloc/pages/data_counter.dart';
+import 'package:learn_bloc/bloc/theme.dart';
 
 class Homepage extends StatelessWidget {
-  const Homepage ({super.key});
+  const Homepage({super.key});
 
   @override
   Widget build(BuildContext context) {
-  Counter mycounter = BlocProvider.of<Counter>(context);
-  // Counter mycounter = context.read<Counter>();
-
+    CounterBloc mycounter = context.read<CounterBloc>();
+    ThemeBloc mytheme = context.read<ThemeBloc>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("DEPENDENCY INJECTION"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-
-          // Global access
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const OtherPage()
-            )
-          );
-
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) => BlocProvider.value(
-          //     value: mycounter,
-          //     child: const OtherPage(),
-          //     )
-          //   )
-          // );
-
-          // Anonymous  access
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) => BlocProvider.value(
-          //       value: mycounter,
-          //       child: const OtherPage(),
-          //     ),
-              
-          //     // BlocProvider(
-          //     //   create: (context) => mycounter,
-          //     //   child: const OtherPage(),
-          //     // ),
-          //   ),
-          // );
-
-          // Named route access
-          // Navigator.of(context).pushNamed("/other");
-        },
-        child: const Icon(Icons.arrow_forward),
+        title: const Text("HOME"),
       ),
       body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Material (
-              color: Colors.green,
-              child: InkWell(
-                onTap: () {
-                  mycounter.decrement();
-                },
-                child: const SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Icon(Icons.remove, color: Colors.white,),
-                ),
-              ),
+            BlocBuilder<CounterBloc, int>(
+              bloc: mycounter,
+              builder: (context, state) {
+                return Text(
+                  "$state",
+                  style: const TextStyle(fontSize: 50),
+                );
+              },
             ),
-            DataCounter(),
-            Material(
-              color: Colors.green,
-              child: InkWell(
-                onTap: () {
-                  mycounter.increment();
-                },
-                child: const SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Icon (Icons.add, color: Colors.white,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    mycounter.remove();
+                  },
+                  icon: Icon(Icons.remove),
                 ),
-              ),
+                IconButton(
+                  onPressed: () {
+                    mycounter.add();
+                  },
+                  icon: Icon(Icons.add),
+                ),
+              ],
             )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          mytheme.changeTheme();
+        } 
       ),
     );
   }
