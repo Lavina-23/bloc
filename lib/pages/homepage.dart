@@ -18,19 +18,40 @@ class Homepage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+
+          // Global access
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => BlocProvider.value(
-                value: mycounter,
-                child: const OtherPage(),
-              ),
-              
-              // BlocProvider(
-              //   create: (context) => mycounter,
-              //   child: const OtherPage(),
-              // ),
-            ),
+              builder: (context) => const OtherPage()
+            )
           );
+
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider.value(
+          //     value: mycounter,
+          //     child: const OtherPage(),
+          //     )
+          //   )
+          // );
+
+          // Anonymous  access
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) => BlocProvider.value(
+          //       value: mycounter,
+          //       child: const OtherPage(),
+          //     ),
+              
+          //     // BlocProvider(
+          //     //   create: (context) => mycounter,
+          //     //   child: const OtherPage(),
+          //     // ),
+          //   ),
+          // );
+
+          // Named route access
+          // Navigator.of(context).pushNamed("/other");
         },
         child: const Icon(Icons.arrow_forward),
       ),
