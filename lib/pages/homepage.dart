@@ -18,15 +18,98 @@ class Homepage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            BlocBuilder<CounterBloc, int>(
-              bloc: mycounter,
-              builder: (context, state) {
-                return Text(
-                  "$state",
-                  style: const TextStyle(fontSize: 50),
-                );
-              },
+            // Multi bloc listener
+            MultiBlocListener(
+              listeners: [
+                BlocListener<ThemeBloc, bool>(
+                  listener: (context, state) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("TEMA GELAP AKTIF"),
+                        duration: Duration(seconds: 1), 
+                      )
+                    );
+                  },
+                  listenWhen: (previous, current) {
+                    if (current == false) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  },
+                ),
+                BlocListener<CounterBloc, int>(
+                  listener: (context, state) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("DIATAS 10"),
+                        duration: Duration(seconds: 1),
+                      )
+                    );
+                  },
+                  listenWhen: (previous, current) {
+                    if (current > 10) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  },
+                ),
+              ],
+              child: BlocBuilder<CounterBloc, int>(
+                bloc: mycounter,
+                builder: (context, state) {
+                  return Text(
+                    "$state",
+                    style: const TextStyle(fontSize: 50),
+                  );
+                },
+              ),
             ),
+
+            // Nested bloc listener
+            // BlocListener<ThemeBloc, bool>(
+            //   listener: (context, state) {
+            //     ScaffoldMessenger.of(context).showSnackBar(
+            //       const SnackBar(
+            //         content: Text("TEMA GELAP AKTIF"),
+            //         duration: Duration(seconds: 1), 
+            //       )
+            //     );
+            //   },
+            //   listenWhen: (previous, current) {
+            //     if (current == false) {
+            //       return true;
+            //     } else {
+            //       return false;
+            //     }
+            //   },
+            //   child: BlocListener<CounterBloc, int>(
+            //     listener: (context, state) {
+            //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            //         content: Text("DIATAS 10"),
+            //         duration: Duration(seconds: 1),
+            //       ));
+            //     },
+            //     listenWhen: (previous, current) {
+            //       if (current > 10) {
+            //         return true;
+            //       } else {
+            //         return false;
+            //       }
+            //     },
+            //     child: BlocBuilder<CounterBloc, int>(
+            //       bloc: mycounter,
+            //       builder: (context, state) {
+            //         return Text(
+            //           "$state",
+            //           style: const TextStyle(fontSize: 50),
+            //         );
+            //       },
+            //     ),
+            //   ),
+            // )
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -47,11 +130,9 @@ class Homepage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          mytheme.changeTheme();
-        } 
-      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        mytheme.changeTheme();
+      }),
     );
   }
 }
